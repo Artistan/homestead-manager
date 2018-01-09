@@ -1,19 +1,19 @@
 module VagrantPlugins
-  module HostManager
+  module HomesteadManager
     class Command < Vagrant.plugin('2', :command)
 
       # Show description when `vagrant list-commands` is triggered
       def self.synopsis
-        "plugin: vagrant-hostmanager: manages the /etc/hosts file within a multi-machine environment"
+        "plugin: homestead-manager: manages the /etc/hosts file within a multi-machine environment"
       end
 
       def execute
         options = {}
         opts = OptionParser.new do |o|
-          o.banner = 'Usage: vagrant hostmanager [vm-name]'
+          o.banner = 'Usage: vagrant hsmanager [vm-name]'
           o.separator ''
-          o.version = VagrantPlugins::HostManager::VERSION
-          o.program_name = 'vagrant hostmanager'
+          o.version = VagrantPlugins::HomesteadManager::VERSION
+          o.program_name = 'vagrant hsmanager'
 
           o.on('--provider provider', String,
             'Update machines with the specific provider.') do |provider|

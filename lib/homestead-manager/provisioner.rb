@@ -1,7 +1,7 @@
-require 'vagrant-hostmanager/hosts_file/updater'
+require 'homestead-manager/hosts_file/updater'
 
 module VagrantPlugins
-  module HostManager
+  module HomesteadManager
     class Provisioner < Vagrant.plugin('2', :provisioner)
 
       def initialize(machine, config)
@@ -12,10 +12,10 @@ module VagrantPlugins
       end
 
       def provision
-        if @config.hostmanager.manage_guest?
+        if @config.hsmanager.manage_guest?
           @updater.update_guest(@machine)
         end
-        if @config.hostmanager.manage_host?
+        if @config.hsmanager.manage_host?
           @updater.update_host
         end
       end

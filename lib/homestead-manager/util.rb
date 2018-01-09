@@ -1,5 +1,5 @@
 module VagrantPlugins
-  module HostManager
+  module HomesteadManager
     module Util
       def self.get_config(env)
         # config_global has been removed from v1.5

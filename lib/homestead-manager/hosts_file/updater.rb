@@ -1,7 +1,7 @@
 require 'tempfile'
 
 module VagrantPlugins
-  module HostManager
+  module HomesteadManager
     module HostsFile
 
       class Updater
@@ -10,7 +10,7 @@ module VagrantPlugins
           @global_env = global_env
           @config = Util.get_config(@global_env)
           @provider = provider
-          @logger = Log4r::Logger.new('vagrant::hostmanager::updater')
+          @logger = Log4r::Logger.new('vagrant::hsmanager::updater')
           @logger.debug("init updater")
         end
 
@@ -88,8 +88,8 @@ module VagrantPlugins
 
         def update_content(file_content, resolving_machine, include_id, line_endings)
           id = include_id ? " id: #{read_or_create_id}" : ""
-          header = "## vagrant-hostmanager-start#{id}\n"
-          footer = "## vagrant-hostmanager-end\n"
+          header = "## homestead-manager-start#{id}\n"
+          footer = "## homestead-manager-end\n"
           body = get_machines
             .map { |machine| get_hosts_file_entry(machine, resolving_machine) }
             .join
@@ -99,19 +99,19 @@ module VagrantPlugins
         def get_hosts_file_entry(machine, resolving_machine)
           ip = get_ip_address(machine, resolving_machine)
           host = machine.config.vm.hostname || machine.name
-          aliases = machine.config.hostmanager.aliases
+          aliases = machine.config.hsmanager.aliases
           if ip != nil
             "#{ip}\t#{host}\n" + aliases.map{|a| "#{ip}\t#{a}"}.join("\n") + "\n"
           end
         end
 
         def get_ip_address(machine, resolving_machine)
-          custom_ip_resolver = machine.config.hostmanager.ip_resolver
+          custom_ip_resolver = machine.config.hsmanager.ip_resolver
           if custom_ip_resolver
             custom_ip_resolver.call(machine, resolving_machine)
           else
             ip = nil
-            if machine.config.hostmanager.ignore_private_ip != true
+            if machine.config.hsmanager.ignore_private_ip != true
               machine.config.vm.networks.each do |network|
                 key, options = network[0], network[1]
                 ip = options[:ip] if key == :private_network
@@ -123,7 +123,7 @@ module VagrantPlugins
         end
 
         def get_machines
-          if @config.hostmanager.include_offline?
+          if @config.hsmanager.include_offline?
             machines = @global_env.machine_names
           else
             machines = @global_env.active_machines
@@ -164,7 +164,7 @@ module VagrantPlugins
         end
 
         def read_or_create_id
-          file = Pathname.new("#{@global_env.local_data_path}/hostmanager/id")
+          file = Pathname.new("#{@global_env.local_data_path}/hsmanager/id")
           if (file.file?)
             id = file.read.strip
           else

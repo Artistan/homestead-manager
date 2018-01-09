@@ -1,5 +1,5 @@
 module VagrantPlugins
-  module HostManager
+  module HomesteadManager
     module Errors
     end
   end

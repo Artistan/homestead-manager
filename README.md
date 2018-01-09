@@ -1,89 +1,89 @@
 Vagrant Host Manager
 ====================
 
-[![Gem](https://img.shields.io/gem/v/vagrant-hostmanager.svg)](https://rubygems.org/gems/vagrant-hostmanager)
-[![Gem](https://img.shields.io/gem/dt/vagrant-hostmanager.svg)](https://rubygems.org/gems/vagrant-hostmanager)
-[![Gem](https://img.shields.io/gem/dtv/vagrant-hostmanager.svg)](https://rubygems.org/gems/vagrant-hostmanager)
-[![Twitter](https://img.shields.io/twitter/url/https/github.com/devopsgroup-io/vagrant-hostmanager.svg?style=social)](https://twitter.com/intent/tweet?text=Check%20out%20this%20awesome%20Vagrant%20plugin%21&url=https%3A%2F%2Fgithub.com%devopsgroup-io%2Fvagrant-hostmanager&hashtags=vagrant%hostmanager&original_referer=)
+[![Gem](https://img.shields.io/gem/v/homestead-manager.svg)](https://rubygems.org/gems/homestead-manager)
+[![Gem](https://img.shields.io/gem/dt/homestead-manager.svg)](https://rubygems.org/gems/homestead-manager)
+[![Gem](https://img.shields.io/gem/dtv/homestead-manager.svg)](https://rubygems.org/gems/homestead-manager)
+[![Twitter](https://img.shields.io/twitter/url/https/github.com/devopsgroup-io/homestead-manager.svg?style=social)](https://twitter.com/intent/tweet?text=Check%20out%20this%20awesome%20Vagrant%20plugin%21&url=https%3A%2F%2Fgithub.com%devopsgroup-io%2Fhomestead-manager&hashtags=vagrant%hsmanager&original_referer=)
 
-`vagrant-hostmanager` is a Vagrant plugin that manages the `hosts` file on guest machines (and optionally the host). Its goal is to enable resolution of multi-machine environments deployed with a cloud provider where IP addresses are not known in advance.
+`homestead-manager` is a Vagrant plugin that manages the `hosts` file on guest machines (and optionally the host). Its goal is to enable resolution of multi-machine environments deployed with a cloud provider where IP addresses are not known in advance.
 
 Installation
 ------------
 
-    $ vagrant plugin install vagrant-hostmanager
+    $ vagrant plugin install homestead-manager
 
 Usage
 -----
 To update the `hosts` file on each active machine, run the following
 command:
 
-    $ vagrant hostmanager
+    $ vagrant hsmanager
 
 The plugin hooks into the `vagrant up` and `vagrant destroy` commands
 automatically.
 When a machine enters or exits the running state , all active
 machines with the same provider will have their `hosts` file updated
-accordingly. Set the `hostmanager.enabled` attribute to `true` in the
+accordingly. Set the `hsmanager.enabled` attribute to `true` in the
 Vagrantfile to activate this behavior.
 
-To update the host's `hosts` file, set the `hostmanager.manage_host`
+To update the host's `hosts` file, set the `hsmanager.manage_host`
 attribute to `true`.
 
-To update the guests' `hosts` file, set the `hostmanager.manage_guest`
+To update the guests' `hosts` file, set the `hsmanager.manage_guest`
 attribute to `true`.
 
 A machine's IP address is defined by either the static IP for a private
 network configuration or by the SSH host configuration. To disable
-using the private network IP address, set `config.hostmanager.ignore_private_ip`
+using the private network IP address, set `config.hsmanager.ignore_private_ip`
 to true.
 
 A machine's host name is defined by `config.vm.hostname`. If this is not
 set, it falls back to the symbol defining the machine in the Vagrantfile.
 
-If the `hostmanager.include_offline` attribute is set to `true`, boxes that are
+If the `hsmanager.include_offline` attribute is set to `true`, boxes that are
 up or have a private ip configured will be added to the hosts file.
 
-In addition, the `hostmanager.aliases` configuration attribute can be used
+In addition, the `hsmanager.aliases` configuration attribute can be used
 to provide aliases for your host names.
 
 Example configuration:
 
 ```ruby
 Vagrant.configure("2") do |config|
-  config.hostmanager.enabled = true
-  config.hostmanager.manage_host = true
-  config.hostmanager.manage_guest = true
-  config.hostmanager.ignore_private_ip = false
-  config.hostmanager.include_offline = true
+  config.hsmanager.enabled = true
+  config.hsmanager.manage_host = true
+  config.hsmanager.manage_guest = true
+  config.hsmanager.ignore_private_ip = false
+  config.hsmanager.include_offline = true
   config.vm.define 'example-box' do |node|
     node.vm.hostname = 'example-box-hostname'
     node.vm.network :private_network, ip: '192.168.42.42'
-    node.hostmanager.aliases = %w(example-box.localdomain example-box-alias)
+    node.hsmanager.aliases = %w(example-box.localdomain example-box-alias)
   end
 end
 ```
 
 ### Provisioner
 
-Starting at version 1.5.0, `vagrant up` runs hostmanager before any provisioning occurs. 
-If you would like hostmanager to run after or during your provisioning stage, 
-you can use hostmanager as a provisioner.  This allows you to use the provisioning 
-order to ensure that hostmanager runs when desired. The provisioner will collect
+Starting at version 1.5.0, `vagrant up` runs hsmanager before any provisioning occurs.
+If you would like hsmanager to run after or during your provisioning stage,
+you can use hsmanager as a provisioner.  This allows you to use the provisioning
+order to ensure that hsmanager runs when desired. The provisioner will collect
 hosts from boxes with the same provider as the running box.
 
 Example:
 
 ```ruby
-# Disable the default hostmanager behavior
-config.hostmanager.enabled = false
+# Disable the default hsmanager behavior
+config.hsmanager.enabled = false
 
-# ... possible provisioner config before hostmanager ...
+# ... possible provisioner config before hsmanager ...
 
-# hostmanager provisioner
-config.vm.provision :hostmanager
+# hsmanager provisioner
+config.vm.provision :hsmanager
 
-# ... possible provisioning config after hostmanager ...
+# ... possible provisioning config after hsmanager ...
 ```
 
 Custom IP resolver
@@ -99,7 +99,7 @@ for each machine by yourself, giving You also access to the machine that is
 updating /etc/hosts. For example:
 
 ```ruby
-config.hostmanager.ip_resolver = proc do |vm, resolving_vm|
+config.hsmanager.ip_resolver = proc do |vm, resolving_vm|
   if hostname = (vm.ssh_info && vm.ssh_info[:host])
     `host #{hostname}`.split("\n").last[/(\d+\.\d+\.\d+\.\d+)/, 1]
   end
@@ -110,11 +110,11 @@ Passwordless sudo
 -----------------
 
 To avoid being asked for the password every time the hosts file is updated,
-enable passwordless sudo for the specific command that hostmanager uses to
+enable passwordless sudo for the specific command that hsmanager uses to
 update the hosts file.
 
   - Add the following snippet to the sudoers file (e.g.
-    `/etc/sudoers.d/vagrant_hostmanager`):
+    `/etc/sudoers.d/homestead_manager`):
 
     ```
     Cmnd_Alias VAGRANT_HOSTMANAGER_UPDATE = /bin/cp <home-directory>/.vagrant.d/tmp/hosts.local /etc/hosts
@@ -142,7 +142,7 @@ Hostmanager will detect Windows guests and hosts and use the appropriate
 path for the ```hosts``` file: ```%WINDIR%\System32\drivers\etc\hosts```
 
 By default on a Windows host, the ```hosts``` file is not writable without
-elevated privileges. If hostmanager detects that it cannot overwrite the file,
+elevated privileges. If hsmanager detects that it cannot overwrite the file,
 it will attempt to do so with elevated privileges, causing the
 [UAC](http://en.wikipedia.org/wiki/User_Account_Control) prompt to appear.
 
@@ -160,7 +160,7 @@ Compatibility
 -------------
 This Vagrant plugin has been tested with the following host and guest operating system combinations.
 
-Date Tested | Vagrant Version | vagrant-hostmanager Version | Host (Workstation) Operating System | Guest (VirtualBox) Operating System
+Date Tested | Vagrant Version | homestead-manager Version | Host (Workstation) Operating System | Guest (VirtualBox) Operating System
 ------------|-----------------|-----------------------------|-------------------------------------|--------------------------------------
 03/23/2016  | 1.8.1           | 1.8.1                       | Ubuntu 14.04 LTS                    | CentOS 7.2
 03/22/2016  | 1.8.1           | 1.8.1                       | OS X 10.11.4                        | CentOS 7.2
@@ -175,10 +175,10 @@ for some providers. Version 1.2 reverts this feature until a suitable implementa
 supporting all providers is available.
 
 * Potentially breaking change in v1.5.0: the running order on `vagrant up` has changed
-so that hostmanager runs before provisioning takes place.  This ensures all hostnames are 
+so that hsmanager runs before provisioning takes place.  This ensures all hostnames are
 available to the guest when it is being provisioned 
-(see [#73](https://github.com/devopsgroup-io/vagrant-hostmanager/issues/73)).
-Previously, hostmanager would run as the very last action.  If you depend on the old behavior, 
+(see [#73](https://github.com/devopsgroup-io/homestead-manager/issues/73)).
+Previously, hsmanager would run as the very last action.  If you depend on the old behavior,
 see the [provisioner](#provisioner) section.
 
 
@@ -192,7 +192,7 @@ To contribute, fork then clone the repository, and then the following:
 1. Install [Ruby](https://www.ruby-lang.org/en/documentation/installation/)
 2. Currently the Bundler version is locked to 1.14.6, please install this version.
     * `gem install bundler -v '1.14.6'`
-3. Then install vagrant-hostmanager dependancies:
+3. Then install homestead-manager dependancies:
     * `bundle _1.14.6_ install`
 
 **Testing**
@@ -200,26 +200,26 @@ To contribute, fork then clone the repository, and then the following:
 1. Build and package your newly developed code:
     * `rake gem:build`
 2. Then install the packaged plugin:
-    * `vagrant plugin install pkg/vagrant-hostmanager-*.gem`
+    * `vagrant plugin install pkg/homestead-manager-*.gem`
 3. Once you're done testing, roll-back to the latest released version:
-    * `vagrant plugin uninstall vagrant-hostmanager`
-    * `vagrant plugin install vagrant-hostmanager`
+    * `vagrant plugin uninstall homestead-manager`
+    * `vagrant plugin install homestead-manager`
 4. Once you're satisfied developing and testing your new code, please submit a pull request for review.
 
 **Releasing**
 
-To release a new version of vagrant-hostmanager you will need to do the following:
+To release a new version of homestead-manager you will need to do the following:
 
 *(only contributors of the GitHub repo and owners of the project at RubyGems will have rights to do this)*
 
-1. First, bump the version in ~/lib/vagrant-hostmanager/version.rb:
+1. First, bump the version in ~/lib/homestead-manager/version.rb:
     * Follow [Semantic Versioning](http://semver.org/).
 2. Then, create a matching GitHub Release (this will also create a tag):
     * Preface the version number with a `v`.
-    * https://github.com/devopsgroup-io/vagrant-hostmanager/releases
+    * https://github.com/devopsgroup-io/homestead-manager/releases
 3. You will then need to build and push the new gem to RubyGems:
     * `rake gem:build`
-    * `gem push pkg/vagrant-hostmanager-1.6.1.gem`
-4. Then, when John Doe runs the following, they will receive the updated vagrant-hostmanager plugin:
+    * `gem push pkg/homestead-manager-1.6.1.gem`
+4. Then, when John Doe runs the following, they will receive the updated homestead-manager plugin:
     * `vagrant plugin update`
-    * `vagrant plugin update vagrant-hostmanager`
+    * `vagrant plugin update homestead-manager`

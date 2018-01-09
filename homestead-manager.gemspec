@@ -2,14 +2,14 @@
 
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'vagrant-hostmanager/version'
+require 'homestead-manager/version'
 
 Gem::Specification.new do |gem|
-  gem.name          = 'vagrant-hostmanager'
-  gem.version       = VagrantPlugins::HostManager::VERSION
-  gem.authors       = ['Shawn Dahlen','Seth Reeser']
-  gem.email         = ['shawn@dahlen.me','info@devopsgroup.io']
-  gem.description   = %q{A Vagrant plugin that manages the /etc/hosts file within a multi-machine environment}
+  gem.name          = 'homestead-manager'
+  gem.version       = VagrantPlugins::HomesteadManager::VERSION
+  gem.authors       = ['Shawn Dahlen','Seth Reeser','Charles Peterson']
+  gem.email         = ['shawn@dahlen.me','info@devopsgroup.io','artistan@artistan.org']
+  gem.description   = %q{A Vagrant plugin that manages homestead /etc/hosts files && ssl certificates within a multi-machine environment}
   gem.summary       = gem.description
   gem.license       = 'MIT'
 

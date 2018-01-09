@@ -1,8 +1,8 @@
-require 'vagrant-hostmanager/hosts_file/updater'
-require 'vagrant-hostmanager/util'
+require 'homestead-manager/hosts_file/updater'
+require 'homestead-manager/util'
 
 module VagrantPlugins
-  module HostManager
+  module HomesteadManager
     module Action
       class UpdateGuest
 
@@ -12,12 +12,12 @@ module VagrantPlugins
           @config = Util.get_config(global_env)
           @machine = env[:machine]
           @updater = HostsFile::Updater.new(@machine.env, env[:provider])
-          @logger = Log4r::Logger.new('vagrant::hostmanager::update_guest')
+          @logger = Log4r::Logger.new('vagrant::hsmanager::update_guest')
         end
 
         def call(env)
-          if @config.hostmanager.manage_guest?
-            env[:ui].info I18n.t('vagrant_hostmanager.action.update_guest', {
+          if @config.hsmanager.manage_guest?
+            env[:ui].info I18n.t('homestead_manager.action.update_guest', {
               :name => @machine.name
             })
             @updater.update_guest(@machine)

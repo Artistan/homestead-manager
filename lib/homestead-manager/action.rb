@@ -1,9 +1,9 @@
-require 'vagrant-hostmanager/action/update_all'
-require 'vagrant-hostmanager/action/update_guest'
-require 'vagrant-hostmanager/action/update_host'
+require 'homestead-manager/action/update_all'
+require 'homestead-manager/action/update_guest'
+require 'homestead-manager/action/update_host'
 
 module VagrantPlugins
-  module HostManager
+  module HomesteadManager
     module Action
       include Vagrant::Action::Builtin
 

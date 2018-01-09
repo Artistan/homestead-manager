@@ -1,8 +1,8 @@
-require 'vagrant-hostmanager/hosts_file/updater'
-require 'vagrant-hostmanager/util'
+require 'homestead-manager/hosts_file/updater'
+require 'homestead-manager/util'
 
 module VagrantPlugins
-  module HostManager
+  module HomesteadManager
     module Action
       class UpdateAll
 
@@ -13,7 +13,7 @@ module VagrantPlugins
           @provider = @machine.provider_name
           @config = Util.get_config(@global_env)
           @updater = HostsFile::Updater.new(@global_env, @provider)
-          @logger = Log4r::Logger.new('vagrant::hostmanager::update_all')
+          @logger = Log4r::Logger.new('vagrant::hsmanager::update_all')
         end
 
         def call(env)
@@ -21,14 +21,14 @@ module VagrantPlugins
           return @app.call(env) if !@machine.id && env[:machine_action] == :destroy
 
           # check config to see if the hosts file should be update automatically
-          return @app.call(env) unless @config.hostmanager.enabled?
+          return @app.call(env) unless @config.hsmanager.enabled?
           @logger.info 'Updating /etc/hosts file automatically'
 
           @app.call(env)
 
           # update /etc/hosts file on active machines
-          if @machine.config.hostmanager.manage_guest?
-            env[:ui].info I18n.t('vagrant_hostmanager.action.update_guests')
+          if @machine.config.hsmanager.manage_guest?
+            env[:ui].info I18n.t('homestead_manager.action.update_guests')
             @global_env.active_machines.each do |name, p|
               if p == @provider
                 machine = @global_env.machine(name, p)
@@ -41,8 +41,8 @@ module VagrantPlugins
           end
 
           # update /etc/hosts files on host if enabled
-          if @machine.config.hostmanager.manage_host?
-            env[:ui].info I18n.t('vagrant_hostmanager.action.update_host')
+          if @machine.config.hsmanager.manage_host?
+            env[:ui].info I18n.t('homestead_manager.action.update_host')
             @updater.update_host
           end
         end

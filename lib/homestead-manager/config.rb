@@ -1,5 +1,5 @@
 module VagrantPlugins
-  module HostManager
+  module HomesteadManager
     class Config < Vagrant.plugin('2', :config)
       attr_accessor :enabled
       attr_accessor :manage_host
@@ -39,32 +39,32 @@ module VagrantPlugins
       def validate(machine)
         errors = []
 
-        errors << validate_bool('hostmanager.enabled', @enabled)
-        errors << validate_bool('hostmanager.manage_host', @manage_host)
-        errors << validate_bool('hostmanager.manage_guest', @manage_guest)
-        errors << validate_bool('hostmanager.ignore_private_ip', @ignore_private_ip)
-        errors << validate_bool('hostmanager.include_offline', @include_offline)
+        errors << validate_bool('hsmanager.enabled', @enabled)
+        errors << validate_bool('hsmanager.manage_host', @manage_host)
+        errors << validate_bool('hsmanager.manage_guest', @manage_guest)
+        errors << validate_bool('hsmanager.ignore_private_ip', @ignore_private_ip)
+        errors << validate_bool('hsmanager.include_offline', @include_offline)
         errors.compact!
 
         # check if aliases option is an Array
-        if  !machine.config.hostmanager.aliases.kind_of?(Array) &&
-            !machine.config.hostmanager.aliases.kind_of?(String)
-          errors << I18n.t('vagrant_hostmanager.config.not_an_array_or_string', {
-            :config_key => 'hostmanager.aliases',
+        if  !machine.config.hsmanager.aliases.kind_of?(Array) &&
+            !machine.config.hsmanager.aliases.kind_of?(String)
+          errors << I18n.t('homestead_manager.config.not_an_array_or_string', {
+            :config_key => 'hsmanager.aliases',
             :is_class   => aliases.class.to_s,
           })
         end
 
-        if !machine.config.hostmanager.ip_resolver.nil? &&
-           !machine.config.hostmanager.ip_resolver.kind_of?(Proc)
-          errors << I18n.t('vagrant_hostmanager.config.not_a_proc', {
-            :config_key => 'hostmanager.ip_resolver',
+        if !machine.config.hsmanager.ip_resolver.nil? &&
+           !machine.config.hsmanager.ip_resolver.kind_of?(Proc)
+          errors << I18n.t('homestead_manager.config.not_a_proc', {
+            :config_key => 'hsmanager.ip_resolver',
             :is_class   => ip_resolver.class.to_s,
           })
         end
 
         errors.compact!
-        { "HostManager configuration" => errors }
+        { "HomesteadManager configuration" => errors }
       end
 
       private
@@ -72,7 +72,7 @@ module VagrantPlugins
       def validate_bool(key, value)
         if ![TrueClass, FalseClass].include?(value.class) &&
            value != UNSET_VALUE
-          I18n.t('vagrant_hostmanager.config.not_a_bool', {
+          I18n.t('homestead_manager.config.not_a_bool', {
             :config_key => key,
             :value      => value.class.to_s
           })
