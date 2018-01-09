@@ -1,5 +1,5 @@
-Vagrant Host Manager
-====================
+Homestead Manager
+=================
 
 [![Gem](https://img.shields.io/gem/v/homestead-manager.svg)](https://rubygems.org/gems/homestead-manager)
 [![Gem](https://img.shields.io/gem/dt/homestead-manager.svg)](https://rubygems.org/gems/homestead-manager)
